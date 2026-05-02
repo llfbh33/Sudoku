@@ -11,19 +11,56 @@ const SudokuPage = () => {
     let [value, setValue] = useState(1);
     let [noteMode, setNoteMode] = useState(false);
     let [mistakes, setMistakes] = useState(0);
+    let [complete, setComplete] = useState({});
+    const sudokuProps = {
+        board,
+        setBoard,
+        value,
+        setValue,
+        noteMode,
+        mistakes,
+        setMistakes,
+        complete,
+        setComplete,
+    };
+    console.log(complete)
 
 
     useEffect(() => {
         if (mistakes >= 3) {
-
-
             setTimeout(() => {
                 alert("Too many mistakes, please try again");
                 setBoard(testBoardOne);
                 setMistakes(0);
-            }, 300); 
+            }, 300);
         }
     }, [mistakes]);
+
+    useEffect(() => {
+        const completeObj = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            remaining: 81
+        };
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[0].length; j++) {
+                if (board[i][j].value !== 0) {
+                    completeObj[board[i][j].value] += 1;
+                    completeObj.remaining -= 1;
+                }
+            }
+        }
+
+        setComplete(completeObj);
+    }, [])
 
 
     return (
@@ -33,7 +70,7 @@ const SudokuPage = () => {
                     <div>{`${mistakes}/3`}</div>
                 </div>
             </section>
-            <SudokuBoard board={board} setBoard={setBoard} value={value} setValue={setValue} noteMode={noteMode} mistakes={mistakes} setMistakes={setMistakes} />
+            <SudokuBoard {...sudokuProps} />
 
             <section id="board-background">
                 <div className="mode-container">
@@ -43,7 +80,7 @@ const SudokuPage = () => {
                 </div>
             </section>
 
-            <NumberPicker value={value} setValue={setValue} />
+            <NumberPicker {...sudokuProps} />
         </div>
     )
 };

@@ -7,7 +7,7 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes}) => {
+const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete}) => {
 
 
     const handleMistakes = (valid) => {
@@ -36,6 +36,15 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                     : cell
             )
         );
+
+        if (valid && currValue !== 0) {
+            let solved = complete[value];
+            solved++;
+            setComplete(prev => ({
+                ...prev,
+                [value]: solved,
+            }))
+        }
 
         setBoard(updatedBoard);
         handleMistakes(valid)
