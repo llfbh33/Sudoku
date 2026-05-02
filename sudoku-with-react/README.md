@@ -17,3 +17,30 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 npm install react-router-dom
+
+
+## Sudoku App – Development Progress
+- Built a responsive Sudoku board using HTML/CSS to validate layout and scaling across screen sizes
+- Initialized a React application with Vite and integrated the board into a component-based structure
+- Designed initial data models:
+- testBoard for seed data
+- boardCoordinates to represent grid structure
+- Refactored board structure into nested arrays to align with grid rendering logic and enable efficient iteration with nested mapping
+- Implemented dynamic board rendering using nested .map() loops to generate rows and cells
+- Developed a responsive Number Picker component for user input
+- Structured page layout with a parent SudokuPage component to manage and compose game elements
+- Introduced React state management for:
+    - Current board state
+    - User-selected number
+- Added interactive UI feedback:
+- Highlighting selected numbers across both the board and number picker
+- Designed squareCoordinates structure to support rendering and positioning of candidate notes within each cell
+- Implemented conditional rendering of notes vs. cell values
+- Ensured stable rendering by assigning unique keys across all nested mapped elements
+- Built core interaction handlers:
+    - cellChange for updating cell values (with logic for toggling values)
+    - noteChange for adding/removing candidate notes
+- Integrated interaction logic into the UI with conditional access based on game rules (e.g., preventing edits on given cells, switching between value and notes modes)
+- Identified and debugging edge cases:
+    - cellChange not updating correctly when notes are enabled
+    - Preventing modification of pre-filled (given) cells
