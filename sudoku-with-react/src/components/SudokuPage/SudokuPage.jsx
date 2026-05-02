@@ -8,7 +8,7 @@ import "./SudokuPage.css";
 
 const SudokuPage = () => {
     const [board, setBoard] = useState(testBoardOne);
-    let [value, setValue] = useState(0);
+    let [value, setValue] = useState(1);
     let [noteMode, setNoteMode] = useState(false);
 
 

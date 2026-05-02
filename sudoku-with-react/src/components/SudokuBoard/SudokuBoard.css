@@ -127,3 +127,7 @@
 .number-selected {
     background-color: rgb(2, 109, 100);
 }
+
+.number-invalid {
+    background-color: rgb(174, 17, 17);
+}

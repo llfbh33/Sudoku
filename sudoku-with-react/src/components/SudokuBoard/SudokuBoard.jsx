@@ -4,6 +4,9 @@ import "./SudokuBoard.css";
 
 
 
+
+
+
 const SudokuBoard = ({ board, setBoard, value, noteMode }) => {
 
     const handleCellChange = (m, n) => {
@@ -11,11 +14,15 @@ const SudokuBoard = ({ board, setBoard, value, noteMode }) => {
         if (noteMode) return;
         if (board[m][n].isGiven) return;
         if (board[m][n].value === value) currValue = 0;
+        let valid = currValue === 0 || value === board[m][n].solution;
 
-        const updatedBoard = board.map((row, rowIdx) =>
+        let updatedBoard = board.map((row, rowIdx) =>
             row.map((cell, colIdx) =>
                 rowIdx === m && colIdx === n
-                    ? { ...cell, value: currValue }
+                    ? { ...cell, 
+                        value: currValue,
+                        valid,           // When changing a cell we need to ensure that the board will still be solvable
+                        }
                     : cell
             )
         );
@@ -23,8 +30,8 @@ const SudokuBoard = ({ board, setBoard, value, noteMode }) => {
         setBoard(updatedBoard);
     };
 
-    const handleNoteChange = (m, n) => {
 
+    const handleNoteChange = (m, n) => {
         const updatedBoard = board.map((row, rowIdx) =>
             row.map((cell, colIdx) => {
                 if (rowIdx === m && colIdx === n) {
@@ -54,11 +61,12 @@ const SudokuBoard = ({ board, setBoard, value, noteMode }) => {
                                                 {row.map((cell, cI) => {
                                                     let [m, n] = cell;
                                                     let num = board[m][n].value;
+                                                    let valid = num === board[m][n].solution;
 
                                                     if (num > 0) {
                                                         return (
                                                             <div
-                                                                className={value === num ? "board-cells number-selected" : "board-cells"}
+                                                                className={!valid ? "board-cells number-invalid" : value === num ? "board-cells number-selected" : "board-cells"}
                                                                 key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
                                                                 onClick={() => handleCellChange(m, n)}
                                                             >
