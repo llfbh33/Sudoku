@@ -12,6 +12,16 @@ const SudokuPage = () => {
     let [noteMode, setNoteMode] = useState(false);
     let [mistakes, setMistakes] = useState(0);
     let [complete, setComplete] = useState({});
+    let [reset, setReset] = useState(true);
+    const handleReset = () => {
+        setReset(true);
+        setBoard(testBoardOne);
+        setValue(1);
+        setNoteMode(false);
+        setMistakes(0)
+    };
+
+
     const sudokuProps = {
         board,
         setBoard,
@@ -22,8 +32,12 @@ const SudokuPage = () => {
         setMistakes,
         complete,
         setComplete,
+        reset,
+        setReset,
+        handleReset
     };
     console.log(complete)
+
 
 
     useEffect(() => {
@@ -37,30 +51,34 @@ const SudokuPage = () => {
     }, [mistakes]);
 
     useEffect(() => {
-        const completeObj = {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            remaining: 81
-        };
+        if (reset) {
+            const completeObj = {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0,
+                6: 0,
+                7: 0,
+                8: 0,
+                9: 0,
+                remaining: 81
+            };
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[0].length; j++) {
-                if (board[i][j].value !== 0) {
-                    completeObj[board[i][j].value] += 1;
-                    completeObj.remaining -= 1;
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board[0].length; j++) {
+                    if (board[i][j].value !== 0) {
+                        completeObj[board[i][j].value] += 1;
+                        completeObj.remaining -= 1;
+                    }
                 }
             }
-        }
 
-        setComplete(completeObj);
-    }, [])
+            setComplete(completeObj);
+            setReset(false);
+        };
+
+    }, [reset])
 
 
     return (

@@ -7,7 +7,7 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete}) => {
+const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete, handleReset}) => {
 
 
     const handleMistakes = (valid) => {
@@ -16,6 +16,8 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
 
     const handleCellChange = (m, n) => {
         let currValue = value;
+
+        if (complete[value] >= 9 && board[m][n].value === 0) return;
 
         if (noteMode || board[m][n].isGiven || board[m][n].value === board[m][n].solution) {
             if (board[m][n].value !== value && value !== 0) setValue(board[m][n].value);
@@ -40,9 +42,12 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
         if (valid && currValue !== 0) {
             let solved = complete[value];
             solved++;
+            let remaining = complete.remaining;
+            remaining--;
             setComplete(prev => ({
                 ...prev,
                 [value]: solved,
+                remaining,
             }))
         }
 
@@ -67,11 +72,14 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
         setBoard(updatedBoard);
     };
 
+
     return (
         <section id="board-background">
             <div id="board-main-outer">
                 <div id="board-main-inner">
-                    <div className="board-squares-container">
+
+                    {complete.remaining > 0 
+                    ? <div className="board-squares-container">
                         {squareCoordinates.map((sqRow, sqRowI) => (
                             <div className="board-rows" key={`sqRow-${sqRowI + 1}`}>
                                 {sqRow.map((sq, sqI) => (
@@ -127,6 +135,13 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                             </div>
                         ))}
                     </div>
+                    : (
+                        <div>
+                            <h3>Congradulations!!</h3>
+                            <h4>You won! Want to try again?</h4>
+                            <div onClick={handleReset}>Reset</div>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
