@@ -89,6 +89,7 @@
 
     font-size: clamp(1rem, 5.5vw, 4rem);
     border: 1px solid rgba(70, 78, 233, 0.56);
+    cursor: pointer;
 }
 
 

@@ -7,7 +7,7 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, noteMode, mistakes, setMistakes}) => {
+const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes}) => {
 
 
     const handleMistakes = (valid) => {
@@ -16,8 +16,12 @@ const SudokuBoard = ({ board, setBoard, value, noteMode, mistakes, setMistakes})
 
     const handleCellChange = (m, n) => {
         let currValue = value;
-        if (noteMode) return;
-        if (board[m][n].isGiven) return;
+
+        if (noteMode || board[m][n].isGiven || board[m][n].value === board[m][n].solution) {
+            if (board[m][n].value !== value && value !== 0) setValue(board[m][n].value);
+            return;
+        }
+
         if (board[m][n].value === value) currValue = 0;
         let valid = currValue === 0 || value === board[m][n].solution;
         

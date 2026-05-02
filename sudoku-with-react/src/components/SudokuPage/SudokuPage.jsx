@@ -11,20 +11,20 @@ const SudokuPage = () => {
     let [value, setValue] = useState(1);
     let [noteMode, setNoteMode] = useState(false);
     let [mistakes, setMistakes] = useState(0);
-    console.log(mistakes)
 
 
-useEffect(() => {
-    if (mistakes >= 3) {
-        
+    useEffect(() => {
+        if (mistakes >= 3) {
 
-        setTimeout(() => {
-            alert("Too many mistakes, please try again");
-            setBoard(testBoardOne);
-            setMistakes(0);
-        }, 300); // 1 second delay (adjust as needed)
-    }
-}, [mistakes]);
+
+            setTimeout(() => {
+                alert("Too many mistakes, please try again");
+                setBoard(testBoardOne);
+                setMistakes(0);
+            }, 300); 
+        }
+    }, [mistakes]);
+
 
     return (
         <div>
@@ -33,7 +33,7 @@ useEffect(() => {
                     <div>{`${mistakes}/3`}</div>
                 </div>
             </section>
-            <SudokuBoard board={board} setBoard={setBoard} value={value} noteMode={noteMode} mistakes={mistakes} setMistakes={setMistakes}/>
+            <SudokuBoard board={board} setBoard={setBoard} value={value} setValue={setValue} noteMode={noteMode} mistakes={mistakes} setMistakes={setMistakes} />
 
             <section id="board-background">
                 <div className="mode-container">
@@ -43,7 +43,7 @@ useEffect(() => {
                 </div>
             </section>
 
-            <NumberPicker value={value} setValue={setValue}/>
+            <NumberPicker value={value} setValue={setValue} />
         </div>
     )
 };
