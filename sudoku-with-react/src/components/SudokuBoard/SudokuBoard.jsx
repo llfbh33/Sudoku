@@ -4,7 +4,41 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({board}) => {
+const SudokuBoard = ({ board, setBoard, value, noteMode }) => {
+
+    const handleCellChange = (m, n) => {
+        let currValue = value;
+        if (noteMode) return;
+        if (board[m][n].isGiven) return;
+        if (board[m][n].value === value) currValue = 0;
+
+        const updatedBoard = board.map((row, rowIdx) =>
+            row.map((cell, colIdx) =>
+                rowIdx === m && colIdx === n
+                    ? { ...cell, value: currValue }
+                    : cell
+            )
+        );
+
+        setBoard(updatedBoard);
+    };
+
+    const handleNoteChange = (m, n) => {
+
+        const updatedBoard = board.map((row, rowIdx) =>
+            row.map((cell, colIdx) => {
+                if (rowIdx === m && colIdx === n) {
+                    const newNotes = [...board[m][n].notes]
+                    newNotes[value] = !newNotes[value];
+                    return { ...cell, notes: newNotes }
+                }
+                return cell;
+            }
+            )
+        );
+
+        setBoard(updatedBoard);
+    };
 
     return (
         <section id="board-background">
@@ -19,18 +53,28 @@ const SudokuBoard = ({board}) => {
                                             <div className="board-rows" key={`sq-${sqI + 1}-row-${rowI}`} >
                                                 {row.map((cell, cI) => {
                                                     let [m, n] = cell;
-                                                    let value = board[m][n].value;
+                                                    let num = board[m][n].value;
 
-                                                    if (value > 0) {
+                                                    if (num > 0) {
                                                         return (
-                                                            <div 
-                                                                className="board-cells" key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}>
-                                                                {value}
+                                                            <div
+                                                                className={value === num ? "board-cells number-selected" : "board-cells"}
+                                                                key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
+                                                                onClick={() => handleCellChange(m, n)}
+                                                            >
+                                                                {num}
                                                             </div>
                                                         )
                                                     } else {
                                                         return (
-                                                            <div className="edit-board" key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}>
+                                                            <div
+                                                                className="edit-board"
+                                                                key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
+                                                                onClick={() => {
+                                                                    if (noteMode) handleNoteChange(m, n);
+                                                                    else handleCellChange(m, n)
+                                                                }}
+                                                            >
                                                                 {noteCoordinates.map((noteRow, rowIndex) => (
                                                                     <div className="edit-rows" key={`noteRow-${rowIndex}`}>
                                                                         {noteRow.map((note) => {
@@ -54,277 +98,6 @@ const SudokuBoard = ({board}) => {
                                 ))}
                             </div>
                         ))}
-                        {/* <div className="board-rows">
-
-                            <div id="square-1" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-2" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        8
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        1
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-3" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        2
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> */}
-                        {/* <div class="board-rows">
-
-                            <div id="square-4" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        5
-                                    </div>
-                                    <div class="board-cells">
-                                        6
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        1
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-5" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        2
-                                    </div>
-                                    <div class="board-cells">
-                                        8
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        6
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        4
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-6" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        9
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        3
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> */}
-                        {/* <div class="board-rows">
-
-                            <div id="square-7" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        6
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        4
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        9
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-8" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        8
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                        3
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="square-9" class="board-squares">
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        5
-                                    </div>
-                                </div>
-                                <div class="board-rows">
-                                    <div class="board-cells">
-                                    </div>
-                                    <div class="board-cells">
-                                        7
-                                    </div>
-                                    <div class="board-cells">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> */}
                     </div>
                 </div>
             </div>
