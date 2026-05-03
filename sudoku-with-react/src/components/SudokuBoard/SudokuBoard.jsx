@@ -139,7 +139,7 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                         <div>
                             <h3>Congradulations!!</h3>
                             <h4>You won! Want to try again?</h4>
-                            <div onClick={handleReset}>Reset</div>
+                            <div onClick={() => handleReset(true)}>Reset</div>
                         </div>
                     )}
                 </div>

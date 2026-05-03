@@ -1,5 +1,6 @@
 import SudokuBoard from "../SudokuBoard/SudokuBoard";
 import NumberPicker from "../NumberPicker/NumberPicker";
+import { generateEasySudoku } from "../../utils";
 import { testBoardOne } from "../../testData";
 import { useState, useEffect } from "react";
 import "./SudokuPage.css";
@@ -7,18 +8,22 @@ import "./SudokuPage.css";
 
 
 const SudokuPage = () => {
-    const [board, setBoard] = useState(testBoardOne);
+    let newBoard = generateEasySudoku();
+    const [board, setBoard] = useState(newBoard);
     let [value, setValue] = useState(1);
     let [noteMode, setNoteMode] = useState(false);
     let [mistakes, setMistakes] = useState(0);
     let [complete, setComplete] = useState({});
     let [reset, setReset] = useState(true);
-    const handleReset = () => {
-        setReset(true);
-        setBoard(testBoardOne);
+    const handleReset = (exchange) => {
+        if (exchange) {
+            newBoard = generateEasySudoku();
+        } 
+        setBoard(newBoard);
         setValue(1);
         setNoteMode(false);
         setMistakes(0)
+        setReset(true);
     };
 
 
@@ -36,7 +41,6 @@ const SudokuPage = () => {
         setReset,
         handleReset
     };
-    console.log(complete)
 
 
 
@@ -44,11 +48,11 @@ const SudokuPage = () => {
         if (mistakes >= 3) {
             setTimeout(() => {
                 alert("Too many mistakes, please try again");
-                setBoard(testBoardOne);
-                setMistakes(0);
+                handleReset(false);
             }, 300);
         }
     }, [mistakes]);
+
 
     useEffect(() => {
         if (reset) {

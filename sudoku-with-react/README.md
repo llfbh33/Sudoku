@@ -44,3 +44,15 @@ npm install react-router-dom
 - Identified and debugging edge cases:
     - cellChange not updating correctly when notes are enabled
     - Preventing modification of pre-filled (given) cells
+- Introduced a `valid` property on each cell to track correctness of user input
+- Implemented dynamic validation logic to update cell validity in real time as users modify values
+- Explored full-board validation on each interaction, but identified performance and complexity concerns
+- Refactored validation strategy to compare user input against a predefined solution
+- Redesigned cell data structure to include a `solution` property, enabling direct value-to-solution comparison and simplifying validation logic
+- Implemented a centralized tracking object to monitor the count of each number (1–9) on the board and remaining placements
+- Used this tracking to disable number selection when the maximum count is reached, improving UX and preventing invalid input
+- Added board reset functionality to restore the game to its initial state
+- Introduced a mistake tracking system:
+    - Increments on incorrect user input
+    - Triggers a reset prompt after 3 mistakes
+    - Integrates with board reset logic to restart gameplay
