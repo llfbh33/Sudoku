@@ -11,11 +11,12 @@ import "./SudokuBoard.css";
 const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode, mistakes, setMistakes, complete, setComplete, handleReset, isRunning, handlePause, type, selectedCell, setSelectedCell }) => {
     const navigate = useNavigate();
 
+    // Increments the mistakes counter
     const handleMistakes = (valid) => {
         if (!valid) setMistakes(prev => prev += 1);
     };
 
-
+    // Handles changes in cells value and activities associated with that change
     const handleCellChange = (m, n) => {
         let currValue = board[m][n].value === value ? 0 : value;
         let valid = currValue === 0 || value === board[m][n].solution;
@@ -68,11 +69,14 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
             )
         );
 
+        // Need to include updating board notes in the situation that they are no longer applicable
+        // Need to include not letting user click on a cell to add a note if the note can not practicaly go in that location
+
         setBoard(updatedBoard);
         handleMistakes(valid);
     };
 
-
+    // Handles adding or removing a note to a cell
     const handleNoteChange = (m, n) => {
         const updatedBoard = board.map((row, rowIdx) =>
             row.map((cell, colIdx) => {
