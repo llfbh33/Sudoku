@@ -3,6 +3,7 @@ import NumberPicker from "../NumberPicker/NumberPicker";
 import { generateEasySudoku } from "../../utils";
 import { testBoardOne } from "../../testData";
 import { useState, useEffect } from "react";
+import { VscDebugRestart } from "react-icons/vsc";
 import "./SudokuPage.css";
 
 
@@ -15,7 +16,10 @@ const SudokuPage = () => {
     let [mistakes, setMistakes] = useState(0);
     let [complete, setComplete] = useState({});
     let [reset, setReset] = useState(true);
-    const handleReset = (exchange) => {
+
+
+    // Resets the board with either old or new board data
+    const handleReset = (exchange) => {  // has to be invoked when being called or exchange is the event
         const newBoard = generateEasySudoku();
         if (exchange) {
             setStartingBoard(newBoard);
@@ -28,8 +32,6 @@ const SudokuPage = () => {
         setMistakes(0)
         setReset(true);
     };
-    console.log(complete)
-
 
     const sudokuProps = {
         board,
@@ -45,7 +47,6 @@ const SudokuPage = () => {
         setReset,
         handleReset
     };
-
 
 
     useEffect(() => {
@@ -92,7 +93,8 @@ const SudokuPage = () => {
     return (
         <div>
             <section id="board-background">
-                <div className="mode-container">
+                <div className="mistake-container">
+                    <VscDebugRestart className="reset-icon" onClick={() => handleReset()}/>
                     <div>{`${mistakes}/3`}</div>
                 </div>
             </section>

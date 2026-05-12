@@ -23,3 +23,20 @@
 .mode-on {
     background-color: rgb(7, 7, 153);
 }
+
+.mistake-container {
+    margin-top: 20px;
+    width: 80vmin;  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: larger;
+}
+
+.reset-icon {
+    cursor: pointer;
+}
+
+.reset-icon:hover {
+    color: white;
+}

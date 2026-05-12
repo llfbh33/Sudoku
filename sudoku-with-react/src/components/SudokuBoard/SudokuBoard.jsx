@@ -12,12 +12,13 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
 
     const handleMistakes = (valid) => {
         if (!valid) setMistakes(prev => prev += 1);
-    }
+    };
 
+console.log(complete)
     const handleCellChange = (m, n) => {
         let currValue = value;
 
-        if (complete[value] >= 9 && board[m][n].value === 0) return;
+        if (complete[value] >= 9 && board[m][n].value === 0) return;  // will not select an empty cell when the current value has 9 locations
 
         if (noteMode || board[m][n].isGiven || board[m][n].value === board[m][n].solution) {
             if (board[m][n].value !== value && value !== 0) setValue(board[m][n].value);
@@ -40,19 +41,31 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
         );
 
         if (valid && currValue !== 0) {
-            let solved = complete[value];
+            const oldVal = value;
+            let newVal = value;
+            let solved = complete[oldVal];
             solved++;
             let remaining = complete.remaining;
             remaining--;
+
+            if (solved >= 9) {
+                newVal = oldVal + 1 > 9 ? 1 : oldVal + 1;
+                while (complete[newVal] >= 9 && complete.remaining > 0) {  // Does not need to loop if there are no possibilities remaining
+                    newVal = newVal + 1 > 9 ? 1 : newVal + 1;
+                }
+            } 
+
             setComplete(prev => ({
                 ...prev,
-                [value]: solved,
+                [oldVal]: solved,
                 remaining,
-            }))
+            }));
+
+            setValue(newVal);
         }
 
         setBoard(updatedBoard);
-        handleMistakes(valid)
+        handleMistakes(valid);
     };
 
 
