@@ -8,8 +8,7 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode, mistakes, setMistakes, complete, setComplete, handleReset, isRunning, handlePause, type }) => {
-    const [selectedCell, setSelectedCell] = useState(null);
+const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode, mistakes, setMistakes, complete, setComplete, handleReset, isRunning, handlePause, type, selectedCell, setSelectedCell }) => {
     const navigate = useNavigate();
 
     const handleMistakes = (valid) => {
@@ -18,7 +17,8 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
 
 
     const handleCellChange = (m, n) => {
-        let currValue = value;
+        let currValue = board[m][n].value === value ? 0 : value;
+        let valid = currValue === 0 || value === board[m][n].solution;
 
         if (complete[value] >= 9 && board[m][n].value === 0) return;  // will not select an empty cell when the current value has 9 locations
 
@@ -28,9 +28,33 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
             return;
         }
 
-        if (board[m][n].value === value) currValue = 0;
-        let valid = currValue === 0 || value === board[m][n].solution;
+        if (valid && currValue !== 0) {
+            const oldVal = value;
+            let newVal = value;
+            let solved = complete[oldVal];
+            solved++;
+            let remaining = complete.remaining;
+            remaining--;
 
+            // When the num count is 9, move to the next unsolved number
+            if (solved >= 9) {
+                setSelectedCell(null);
+                newVal = oldVal + 1 > 9 ? 1 : oldVal + 1;
+                while (complete[newVal] >= 9 && complete.remaining > 0) {  // Does not need to loop if there are no possibilities remaining
+                    newVal = newVal + 1 > 9 ? 1 : newVal + 1;
+                }
+            } else {
+                setSelectedCell([m, n]);
+            }
+
+            setComplete(prev => ({
+                ...prev,
+                [oldVal]: solved,
+                remaining,
+            }));
+
+            setValue(newVal);
+        }
 
         let updatedBoard = board.map((row, rowIdx) =>
             row.map((cell, colIdx) =>
@@ -44,34 +68,8 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
             )
         );
 
-        if (valid && currValue !== 0) {
-            const oldVal = value;
-            let newVal = value;
-            let solved = complete[oldVal];
-            solved++;
-            let remaining = complete.remaining;
-            remaining--;
-
-            // When the num count is 9, move to the next unsolved number
-            if (solved >= 9) {
-                newVal = oldVal + 1 > 9 ? 1 : oldVal + 1;
-                while (complete[newVal] >= 9 && complete.remaining > 0) {  // Does not need to loop if there are no possibilities remaining
-                    newVal = newVal + 1 > 9 ? 1 : newVal + 1;
-                }
-            }
-
-            setComplete(prev => ({
-                ...prev,
-                [oldVal]: solved,
-                remaining,
-            }));
-
-            setValue(newVal);
-        }
-
         setBoard(updatedBoard);
         handleMistakes(valid);
-        setSelectedCell([m, n]);
     };
 
 

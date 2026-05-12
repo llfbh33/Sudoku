@@ -24,6 +24,7 @@ const SudokuPage = () => {
     const [time, setTime] = useState(0);
     const [formattedTime, setFormattedTime] = useState("0:00");
     const [isRunning, setIsRunning] = useState(true);
+    const [selectedCell, setSelectedCell] = useState(null);
 
 
     // Resets the board with either old or new board data
@@ -45,6 +46,7 @@ const SudokuPage = () => {
         setValue(1);
         setNoteMode(false);
         setMistakes(0)
+        setSelectedCell(null);
         setIsRunning(true);
     };
 
@@ -67,6 +69,8 @@ const SudokuPage = () => {
         isRunning,
         handlePause,
         type,
+        selectedCell,
+        setSelectedCell,
     };
 
 
