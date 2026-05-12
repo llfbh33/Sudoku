@@ -149,10 +149,10 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
                                                                     {noteCoordinates.map((noteRow, rowIndex) => (
                                                                         <div className="edit-rows" key={`noteRow-${rowIndex}`}>
                                                                             {noteRow.map((note) => {
-                                                                                let markNote = board[m][n].notes[note];
+                                                                                const markNote = board[m][n].notes[note];
 
                                                                                 return (
-                                                                                    <div className="edit-cells" key={`note-${note}`}>
+                                                                                    <div className={markNote && value === note ? "edit-cells edit-cell-selected" : "edit-cells"} key={`note-${note}`}>
                                                                                         {markNote ? note : ""}
                                                                                     </div>
                                                                                 )
@@ -174,12 +174,16 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
                             ? (
                                 <div>
                                     <h2>The game is paused</h2>
-                                    <h3 className="continue" onClick={handlePause}>Continue</h3>
+                                    <div className="new-game-spacing">
+                                        <h3 className="continue" onClick={handlePause}>Continue</h3>
+                                    </div>
                                     <div className="new-game-spacing">
                                         <div className="restart" onClick={() => handleReset(false)}>Restart</div>
+                                    </div>
+                                    <div className="new-game-spacing">
                                         <div className="restart" onClick={() => handleReset(true)}>New Game</div>
                                     </div>
-                                                                        <div className="new-game-spacing">
+                                    <div className="new-game-spacing">
                                         <div className="restart" onClick={() => navigate('/')}>Main Menu</div>
                                     </div>
                                 </div>
@@ -190,8 +194,10 @@ const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode
                                     <h4>{`Your time was: ${formattedTime}`}</h4>
                                     <h3>{`You won! Try again on ${type.charAt(0).toUpperCase() + type.slice(1)}`}</h3>
                                     <div className="new-game-spacing">
-                                        <div className="restart" onClick={() => handleReset(false)}>Restart</div>
                                         <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                                    </div>
+                                    <div className="new-game-spacing">
+                                        <div className="restart" onClick={() => handleReset(false)}>Restart</div>
                                     </div>
                                     <div className="new-game-spacing">
                                         <div className="restart" onClick={() => navigate('/')}>Main Menu</div>

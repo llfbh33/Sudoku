@@ -126,6 +126,10 @@
     font-size: clamp(0.5rem, 1.8vw, 1.6rem);
 }
 
+.edit-cell-selected {
+    background-color: rgba(10, 167, 154, 0.404);
+}
+
 .number-selected {
     background-color: rgb(2, 109, 100);
 }

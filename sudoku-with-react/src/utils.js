@@ -195,11 +195,12 @@ const hasViableHomes = (board, targetValue) => {
 
 /*----------IN USE----------- */
 
-
+// Creates an empty sudoku board
 const createEmptyGrid = () => {
     return Array.from({ length: 9 }, () => Array(9).fill(0));
 };
 
+// Shuffles the elements within an array
 const shuffle = (arr) => {
     const copy = [...arr];
 
@@ -211,6 +212,7 @@ const shuffle = (arr) => {
     return copy;
 };
 
+// Determins if the board will be solvable if the specified num is located at the row/col provided
 const isValidPlacement = (board, row, col, num) => {
     for (let i = 0; i < 9; i++) {
         if (board[row][i] === num) return false;
@@ -229,6 +231,7 @@ const isValidPlacement = (board, row, col, num) => {
     return true;
 };
 
+// Completly fills a blank sudoku board
 const fillBoard = (board) => {
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
@@ -249,11 +252,11 @@ const fillBoard = (board) => {
             return false;
         }
     }
-
     return true;
 };
 
 
+// Builds a completion object fot a specific board
 export const buildCompleteObj = (boardData) => {
     const completeObj = {
         1: 0,
@@ -284,31 +287,33 @@ export const buildCompleteObj = (boardData) => {
 const removals = {
     beginner: 30, // 51 givens
     easy: 40,     // 41 givens
-    medium: 50,   // 31 givens
-    hard: 56      // 25 givens
+    medium: 46,   // 35 givens
+    hard: 54      // 27 givens
 };
 
+
+// Assembles board and completion tracking object to send to app
 export const generateSudoku = (level) => {
     const solvedBoard = createEmptyGrid();
 
     fillBoard(solvedBoard);
 
-    const cellsToRemove = removals[level];
+    const cellsToRemove = removals[level];                  // Determins the amount of cells to remove based on dificulty level
     const puzzleBoard = solvedBoard.map(row => [...row]);
 
-    const positions = shuffle(
+    const positions = shuffle(                              // generates 81 row and column options for removal
         Array.from({ length: 81 }, (_, i) => ({
             row: Math.floor(i / 9),
             col: i % 9,
         }))
     );
 
-    for (let i = 0; i < cellsToRemove; i++) {
+    for (let i = 0; i < cellsToRemove; i++) {               // Removes Specified amount of cells based on the shuffled array up to level difficulty removal
         const { row, col } = positions[i];
         puzzleBoard[row][col] = 0;
     }
 
-    const resultBoard = puzzleBoard.map((row, rowIndex) =>
+    const resultBoard = puzzleBoard.map((row, rowIndex) =>  // map in necessary data for each cell
         row.map((value, colIndex) => ({
             value,
             isGiven: value !== 0,
@@ -317,7 +322,7 @@ export const generateSudoku = (level) => {
         }))
     );
 
-    const complete = buildCompleteObj(resultBoard);
+    const complete = buildCompleteObj(resultBoard);         // generate a completion object for the generated board
 
     return {puzzleBoard: resultBoard, completeObj: complete};
 };
