@@ -7,14 +7,14 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete, handleReset}) => {
-
+const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete, handleReset }) => {
+    const [selectedCell, setSelectedCell] = useState(null);
 
     const handleMistakes = (valid) => {
         if (!valid) setMistakes(prev => prev += 1);
     };
 
-console.log(complete)
+
     const handleCellChange = (m, n) => {
         let currValue = value;
 
@@ -22,20 +22,22 @@ console.log(complete)
 
         if (noteMode || board[m][n].isGiven || board[m][n].value === board[m][n].solution) {
             if (board[m][n].value !== value && value !== 0) setValue(board[m][n].value);
+            setSelectedCell([m, n]);
             return;
         }
 
         if (board[m][n].value === value) currValue = 0;
         let valid = currValue === 0 || value === board[m][n].solution;
-        
+
 
         let updatedBoard = board.map((row, rowIdx) =>
             row.map((cell, colIdx) =>
                 rowIdx === m && colIdx === n
-                    ? { ...cell, 
+                    ? {
+                        ...cell,
                         value: currValue,
                         valid,           // When changing a cell we need to ensure that the board will still be solvable
-                        }
+                    }
                     : cell
             )
         );
@@ -48,12 +50,13 @@ console.log(complete)
             let remaining = complete.remaining;
             remaining--;
 
+            // When the num count is 9, move to the next unsolved number
             if (solved >= 9) {
                 newVal = oldVal + 1 > 9 ? 1 : oldVal + 1;
                 while (complete[newVal] >= 9 && complete.remaining > 0) {  // Does not need to loop if there are no possibilities remaining
                     newVal = newVal + 1 > 9 ? 1 : newVal + 1;
                 }
-            } 
+            }
 
             setComplete(prev => ({
                 ...prev,
@@ -66,6 +69,7 @@ console.log(complete)
 
         setBoard(updatedBoard);
         handleMistakes(valid);
+        setSelectedCell([m, n]);
     };
 
 
@@ -91,73 +95,84 @@ console.log(complete)
             <div id="board-main-outer">
                 <div id="board-main-inner">
 
-                    {complete.remaining > 0 
-                    ? <div className="board-squares-container">
-                        {squareCoordinates.map((sqRow, sqRowI) => (
-                            <div className="board-rows" key={`sqRow-${sqRowI + 1}`}>
-                                {sqRow.map((sq, sqI) => (
-                                    <div className="board-squares" key={`square-${sqI + 1}`} >
-                                        {sq.map((row, rowI) => (
-                                            <div className="board-rows" key={`sq-${sqI + 1}-row-${rowI}`} >
-                                                {row.map((cell, cI) => {
-                                                    let [m, n] = cell;
-                                                    let num = board[m][n].value;
-                                                    let valid = num === board[m][n].solution;
+                    {complete.remaining > 0
+                        ? <div className="board-squares-container">
+                            {squareCoordinates.map((sqRow, sqRowI) => (
+                                <div className="board-rows" key={`sqRow-${sqRowI + 1}`}>
+                                    {sqRow.map((sq, sqI) => (
+                                        <div className="board-squares" key={`square-${sqI + 1}`} >
+                                            {sq.map((row, rowI) => (
+                                                <div className="board-rows" key={`sq-${sqI + 1}-row-${rowI}`} >
+                                                    {row.map((cell, cI) => {
+                                                        const [m, n] = cell;
+                                                        const num = board[m][n].value;
+                                                        const valid = num === board[m][n].solution;
+                                                        const isSupportCell = selectedCell && (
+                                                            m === selectedCell[0] || n === selectedCell[1]
+                                                        );
 
-                                                    if (num > 0) {
-                                                        return (
-                                                            <div
-                                                                className={!valid ? "board-cells number-invalid" : value === num ? "board-cells number-selected" : "board-cells"}
-                                                                key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
-                                                                onClick={() => handleCellChange(m, n)}
-                                                            >
-                                                                {num}
-                                                            </div>
-                                                        )
-                                                    } else {
-                                                        return (
-                                                            <div
-                                                                className="edit-board"
-                                                                key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
-                                                                onClick={() => {
-                                                                    if (noteMode) handleNoteChange(m, n);
-                                                                    else handleCellChange(m, n)
-                                                                }}
-                                                            >
-                                                                {noteCoordinates.map((noteRow, rowIndex) => (
-                                                                    <div className="edit-rows" key={`noteRow-${rowIndex}`}>
-                                                                        {noteRow.map((note) => {
-                                                                            let markNote = board[m][n].notes[note];
+                                                        if (num > 0) {
+                                                            return (
+                                                                <div
+                                                                    className={
+                                                                        !valid 
+                                                                        ? "board-cells number-invalid" 
+                                                                        : value === num 
+                                                                        ? "board-cells number-selected" 
+                                                                        : isSupportCell
+                                                                        ? "board-cells number-selected-support"
+                                                                        : "board-cells"
+                                                                    }
+                                                                    key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
+                                                                    onClick={() => handleCellChange(m, n)}
+                                                                >
+                                                                    {num}
+                                                                </div>
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <div
+                                                                    className={`edit-board ${isSupportCell ? "number-selected-support" : ""}`}
+                                                                    key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
+                                                                    onClick={() => {
+                                                                        if (noteMode) handleNoteChange(m, n);
+                                                                        else handleCellChange(m, n)
+                                                                    }}
+                                                                >
+                                                                    {noteCoordinates.map((noteRow, rowIndex) => (
+                                                                        <div className="edit-rows" key={`noteRow-${rowIndex}`}>
+                                                                            {noteRow.map((note) => {
+                                                                                let markNote = board[m][n].notes[note];
 
-                                                                            return (
-                                                                                <div className="edit-cells" key={`note-${note}`}>
-                                                                                    {markNote ? note : ""}
-                                                                                </div>
-                                                                            )
-                                                                        })}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        )
-                                                    }
-                                                })}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                    : (
-                        <div>
-                            <h3>Congradulations!!</h3>
-                            <h4>You won! Want to try again?</h4>
-                            <div className="new-game-spacing">
-                                <div className="restart" onClick={() => handleReset(false)}>Restart</div>
-                                <div className="restart" onClick={() => handleReset(true)}>New Game</div>
-                            </div>
+                                                                                return (
+                                                                                    <div className="edit-cells" key={`note-${note}`}>
+                                                                                        {markNote ? note : ""}
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            )
+                                                        }
+                                                    })}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
                         </div>
-                    )}
+                        : (
+                            <div>
+                                <h3>Congradulations!!</h3>
+                                <h4>You won! Want to try again?</h4>
+                                <div className="new-game-spacing">
+                                    <div className="restart" onClick={() => handleReset(false)}>Restart</div>
+                                    <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                                </div>
+                            </div>
+                        )}
                 </div>
             </div>
         </section>

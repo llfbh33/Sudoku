@@ -130,6 +130,10 @@
     background-color: rgb(2, 109, 100);
 }
 
+.number-selected-support {
+    background-color: rgba(2, 109, 100, 0.247);
+}
+
 .number-invalid {
     background-color: rgb(174, 17, 17);
 }
