@@ -8,18 +8,21 @@ import "./SudokuPage.css";
 
 
 const SudokuPage = () => {
-    let newBoard = generateEasySudoku();
-    const [board, setBoard] = useState(newBoard);
+    const [startingBoard, setStartingBoard] = useState(generateEasySudoku())
+    const [board, setBoard] = useState(startingBoard);
     let [value, setValue] = useState(1);
     let [noteMode, setNoteMode] = useState(false);
     let [mistakes, setMistakes] = useState(0);
     let [complete, setComplete] = useState({});
     let [reset, setReset] = useState(true);
     const handleReset = (exchange) => {
+        const newBoard = generateEasySudoku();
         if (exchange) {
-            newBoard = generateEasySudoku();
-        } 
-        setBoard(newBoard);
+            setStartingBoard(newBoard);
+            setBoard(newBoard);
+        } else {
+            setBoard(startingBoard);
+        }
         setValue(1);
         setNoteMode(false);
         setMistakes(0)

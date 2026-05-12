@@ -133,3 +133,19 @@
 .number-invalid {
     background-color: rgb(174, 17, 17);
 }
+
+.new-game-spacing {
+    /* flex: 1; */
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+.restart {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.restart:hover {
+    color: rgb(104, 104, 243);
+}

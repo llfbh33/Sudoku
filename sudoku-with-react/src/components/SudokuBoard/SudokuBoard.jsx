@@ -139,7 +139,10 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                         <div>
                             <h3>Congradulations!!</h3>
                             <h4>You won! Want to try again?</h4>
-                            <div onClick={() => handleReset(true)}>Reset</div>
+                            <div className="new-game-spacing">
+                                <div className="restart" onClick={() => handleReset(false)}>Restart</div>
+                                <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                            </div>
                         </div>
                     )}
                 </div>
