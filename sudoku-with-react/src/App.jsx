@@ -4,6 +4,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import Layout from './components/Layout/Layout';
+import MenuPage from './components/MenuPage/MenuPage';
 import SudokuPage from './components/SudokuPage/SudokuPage';
 import './App.css'
 
@@ -11,7 +12,8 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      {path: '/', element: <SudokuPage />},
+      {path: '/', element: <MenuPage />},
+      {path: '/sudoku/:type', element: <SudokuPage />},
     ]
   }
 ])

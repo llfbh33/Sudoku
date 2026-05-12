@@ -17,6 +17,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 npm install react-router-dom
+npm install react-icons --save
 
 
 ## Sudoku App – Development Progress
@@ -56,3 +57,8 @@ npm install react-router-dom
     - Increments on incorrect user input
     - Triggers a reset prompt after 3 mistakes
     - Integrates with board reset logic to restart gameplay
+- Refactored the board reset function to reset the current board or produce a new board
+- Added a refresh button for users who are stuck
+- Set the current number to change to the next available number is all nine values are present on the board
+- Added help shaddows on horizontal and vertical cells
+    - need to refactor, a little janky

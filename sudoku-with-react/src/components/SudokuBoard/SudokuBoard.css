@@ -131,7 +131,7 @@
 }
 
 .number-selected-support {
-    background-color: rgba(2, 109, 100, 0.247);
+    background-color: rgba(10, 167, 153, 0.082);
 }
 
 .number-invalid {
@@ -143,13 +143,20 @@
     display: flex;
     justify-content: center;
     gap: 60px;
+    margin-bottom: 20px;
 }
 
-.restart {
+.continue {
+    margin-bottom: 20px;
+}
+
+.restart,
+.continue {
     cursor: pointer;
     font-weight: 700;
 }
 
-.restart:hover {
+.restart:hover,
+.continue:hover {
     color: rgb(104, 104, 243);
 }

@@ -1,5 +1,6 @@
 import { squareCoordinates, noteCoordinates } from "../../testData";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SudokuBoard.css";
 
 
@@ -7,8 +8,9 @@ import "./SudokuBoard.css";
 
 
 
-const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, setMistakes, complete, setComplete, handleReset }) => {
+const SudokuBoard = ({ board, setBoard, value, setValue, formattedTime, noteMode, mistakes, setMistakes, complete, setComplete, handleReset, isRunning, handlePause, type }) => {
     const [selectedCell, setSelectedCell] = useState(null);
+    const navigate = useNavigate();
 
     const handleMistakes = (valid) => {
         if (!valid) setMistakes(prev => prev += 1);
@@ -95,8 +97,8 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
             <div id="board-main-outer">
                 <div id="board-main-inner">
 
-                    {complete.remaining > 0
-                        ? <div className="board-squares-container">
+                    {complete.remaining > 0 && isRunning
+                        ? (<div className="board-squares-container">
                             {squareCoordinates.map((sqRow, sqRowI) => (
                                 <div className="board-rows" key={`sqRow-${sqRowI + 1}`}>
                                     {sqRow.map((sq, sqI) => (
@@ -108,20 +110,25 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                                                         const num = board[m][n].value;
                                                         const valid = num === board[m][n].solution;
                                                         const isSupportCell = selectedCell && (
-                                                            m === selectedCell[0] || n === selectedCell[1]
+                                                            m === selectedCell[0] ||
+                                                            n === selectedCell[1] ||
+                                                            (
+                                                                Math.floor(m / 3) === Math.floor(selectedCell[0] / 3) &&
+                                                                Math.floor(n / 3) === Math.floor(selectedCell[1] / 3)
+                                                            )
                                                         );
 
                                                         if (num > 0) {
                                                             return (
                                                                 <div
                                                                     className={
-                                                                        !valid 
-                                                                        ? "board-cells number-invalid" 
-                                                                        : value === num 
-                                                                        ? "board-cells number-selected" 
-                                                                        : isSupportCell
-                                                                        ? "board-cells number-selected-support"
-                                                                        : "board-cells"
+                                                                        !valid
+                                                                            ? "board-cells number-invalid"
+                                                                            : value === num
+                                                                                ? "board-cells number-selected"
+                                                                                : isSupportCell
+                                                                                    ? "board-cells number-selected-support"
+                                                                                    : "board-cells"
                                                                     }
                                                                     key={`sq-${sqI + 1}-row-${rowI}-cell-${cI}`}
                                                                     onClick={() => handleCellChange(m, n)}
@@ -162,17 +169,35 @@ const SudokuBoard = ({ board, setBoard, value, setValue, noteMode, mistakes, set
                                     ))}
                                 </div>
                             ))}
-                        </div>
-                        : (
-                            <div>
-                                <h3>Congradulations!!</h3>
-                                <h4>You won! Want to try again?</h4>
-                                <div className="new-game-spacing">
-                                    <div className="restart" onClick={() => handleReset(false)}>Restart</div>
-                                    <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                        </div>)
+                        : complete.remaining > 0 && !isRunning
+                            ? (
+                                <div>
+                                    <h2>The game is paused</h2>
+                                    <h3 className="continue" onClick={handlePause}>Continue</h3>
+                                    <div className="new-game-spacing">
+                                        <div className="restart" onClick={() => handleReset(false)}>Restart</div>
+                                        <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                                    </div>
+                                                                        <div className="new-game-spacing">
+                                        <div className="restart" onClick={() => navigate('/')}>Main Menu</div>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )
+                            : (
+                                <div>
+                                    <h2>Congradulations!!</h2>
+                                    <h4>{`Your time was: ${formattedTime}`}</h4>
+                                    <h3>{`You won! Try again on ${type.charAt(0).toUpperCase() + type.slice(1)}`}</h3>
+                                    <div className="new-game-spacing">
+                                        <div className="restart" onClick={() => handleReset(false)}>Restart</div>
+                                        <div className="restart" onClick={() => handleReset(true)}>New Game</div>
+                                    </div>
+                                    <div className="new-game-spacing">
+                                        <div className="restart" onClick={() => navigate('/')}>Main Menu</div>
+                                    </div>
+                                </div>
+                            )}
                 </div>
             </div>
         </section>

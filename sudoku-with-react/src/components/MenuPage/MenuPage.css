@@ -1,0 +1,61 @@
+
+
+/* Main Containers */
+#level-background {
+    /* min-height: 100vh;                                  full screen height */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px;
+}
+
+/* Controls size and spacing */
+#level-main-outer {
+    min-width: 280px;
+    width: 80vmin;                                      /* 90% of the smaller side of the view port */
+    aspect-ratio: 1 / 1;                                /* width === height */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid rgba(0, 157, 255, 0.627);
+}
+
+#level-main-inner {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border: 1px solid rgba(36, 36, 216, 0.56);
+}
+
+#level-main-inner h1 {
+    padding-bottom: 30px;
+    border-bottom: 1px solid purple;
+}
+
+.level-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.level-button {
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.level-button:hover {
+    color: rgb(104, 104, 243);
+}

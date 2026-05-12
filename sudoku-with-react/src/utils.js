@@ -253,14 +253,47 @@ const fillBoard = (board) => {
     return true;
 };
 
-export const generateEasySudoku = () => {
+
+export const buildCompleteObj = (boardData) => {
+    const completeObj = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        remaining: 81
+    };
+
+    for (let i = 0; i < boardData.length; i++) {
+        for (let j = 0; j < boardData[0].length; j++) {
+            if (boardData[i][j].value !== 0) {
+                completeObj[boardData[i][j].value] += 1;
+                completeObj.remaining -= 1;
+            }
+        }
+    }
+
+    return completeObj;
+};
+
+
+const removals = {
+    beginner: 30, // 51 givens
+    easy: 40,     // 41 givens
+    medium: 50,   // 31 givens
+    hard: 56      // 25 givens
+};
+
+export const generateSudoku = (level) => {
     const solvedBoard = createEmptyGrid();
 
     fillBoard(solvedBoard);
 
-    // Easy = leave more numbers visible.
-    // 40–45 given cells is usually beginner-friendly.
-    const cellsToRemove = 36;
+    const cellsToRemove = removals[level];
     const puzzleBoard = solvedBoard.map(row => [...row]);
 
     const positions = shuffle(
@@ -275,7 +308,7 @@ export const generateEasySudoku = () => {
         puzzleBoard[row][col] = 0;
     }
 
-    return puzzleBoard.map((row, rowIndex) =>
+    const resultBoard = puzzleBoard.map((row, rowIndex) =>
         row.map((value, colIndex) => ({
             value,
             isGiven: value !== 0,
@@ -283,4 +316,8 @@ export const generateEasySudoku = () => {
             solution: solvedBoard[rowIndex][colIndex],
         }))
     );
+
+    const complete = buildCompleteObj(resultBoard);
+
+    return {puzzleBoard: resultBoard, completeObj: complete};
 };

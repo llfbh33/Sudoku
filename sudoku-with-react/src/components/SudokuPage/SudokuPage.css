@@ -33,10 +33,18 @@
     font-size: larger;
 }
 
-.reset-icon {
+.icon-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.icon-button {
     cursor: pointer;
 }
 
-.reset-icon:hover {
+.icon-button:hover {
     color: white;
 }
