@@ -2,7 +2,7 @@
 import "./NumberPicker.css";
 
 
-const NumberPicker = ({value, setValue, complete, setComplete}) => {
+const NumberPicker = ({value, setValue, complete}) => {
 
     const handleValueChange = (num) => {
         if (complete[num] >= 9) return;

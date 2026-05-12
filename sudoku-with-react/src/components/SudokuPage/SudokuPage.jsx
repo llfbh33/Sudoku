@@ -25,6 +25,7 @@ const SudokuPage = () => {
         setMistakes(0)
         setReset(true);
     };
+    console.log(complete)
 
 
     const sudokuProps = {
